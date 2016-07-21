@@ -1,0 +1,49 @@
+{
+  "name": "mahmoudz/fyber-php-sdk",
+  "description": "PHP SKD for Fyber.com",
+  "license": "MIT",
+  "keywords": [
+    "Fyber",
+    "Fyber SDK",
+    "Fyber API",
+    "Fyber PHP",
+    "NextPack"
+  ],
+  "authors": [
+    {
+      "name": "Mahmoud Zalt",
+      "email": "mahmoud@zalt.me",
+      "homepage": "http://www.zalt.me",
+      "role": "Coder"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/config": "5.2.*",
+    "guzzlehttp/guzzle": "6.2.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.6.*",
+    "mockery/mockery": "0.9.*",
+    "symfony/var-dumper": "3.1.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "mahmoudz\\fyberPhpSdk\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "mahmoudz\\fyberPhpSdk\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  },
+  "minimum-stability": "stable"
+}
