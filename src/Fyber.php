@@ -86,7 +86,7 @@ class Fyber implements FyberInterface
     {
         $appId = null;
 
-        switch ($appType) {
+        switch (strtolower($appType)) {
             case 'android':
                 $appId = $this->android_app_id;
                 break;
