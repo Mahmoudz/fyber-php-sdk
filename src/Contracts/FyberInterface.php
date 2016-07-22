@@ -1,19 +1,21 @@
 <?php
+
 namespace mahmoudz\fyberPhpSdk\Contracts;
 
 /**
  * Interface  FyberInterface
- * @package  mahmoudz\fyberPhpSdk\Contracts
+ *
  * @author   Mahmoud Zalt  <mahmoud@zalt.me>
  */
 interface FyberInterface
 {
 
     /**
-     * @param $data
+     * @param array $data
+     * @param       $appType
      *
      * @return  mixed
      */
-    public function getOffers(Array $data);
+    public function getOffers(Array $data, $appType);
 
 }

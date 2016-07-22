@@ -1,4 +1,5 @@
 <?php
+
 namespace mahmoudz\fyberPhpSdk\Facades;
 
 use Illuminate\Support\Facades\Facade;

@@ -9,7 +9,7 @@ return [
     'web_app_id'      => '',
 
     'base_url'        => 'http://api.fyber.com/feed/',
-    'api_version'     => 1,
+    'api_version'     => '1',
     'response_format' => 'json',
 
 ];

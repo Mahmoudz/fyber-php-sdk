@@ -51,7 +51,7 @@ Open `config/fyber-sdk.php` and customze the package
     'ios_app_id'      => '22344',
     'web_app_id'      => '44566',
     'base_url'        => 'http://api.fyber.com/feed/',
-    'api_version'     => 1,
+    'api_version'     => '1',
     'response_format' => 'json',
 ```
 
@@ -66,8 +66,8 @@ Note: It's very recommended to not add your token (any sensetive data) to the co
 The easiest way is to use it is by the `Fyber` facade.
 
 ```php
-// sent from the Mobile App:
-$data = [
+
+$requiredData = [
     'uid'                                   => 1,
     'locale'                                => 'de',
     'device_id'                             => '2b6f22c904d137be2e2730235f5664094b831186',
@@ -75,15 +75,9 @@ $data = [
     'timestamp'                             => Carbon::now()->timestamp,
     'google_ad_id'                          => 'eff26c67f527e6817b36935c54f8cc5cc5cffac2',
     'google_ad_id_limited_tracking_enabled' => '38400000-8cf0-11bd-b23e-20b96e40000d',
-    'pub0'                                  => null,
-    'ip'                                    => null,
-    'offer_types'                           => null,
-    'device'                                => null,
-    'page'                                  => null,
-    'ps_time'                               => null,
 ];
 
-$offers = Fyber::getOffers($data);
+$offers = Fyber::getOffers($requiredData, 'android'); // supported: ios, web and android
 ```
 
 ##### General usage:
@@ -91,7 +85,7 @@ $offers = Fyber::getOffers($data);
 ```php
 // inject `mahmoudz\fyberPhpSdk\Fyber`
 
-$offers = $fyber->getOffers($data);
+$offers = $fyber->getOffers($data, 'web');
 ```
 
 

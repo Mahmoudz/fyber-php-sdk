@@ -3,11 +3,11 @@
 namespace mahmoudz\fyberPhpSdk\Exceptions;
 
 /**
- * Class MissingApiKeyException
+ * Class MissingRequiredDataException
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class MissingApiKeyException extends Exception
+class MissingRequiredDataException extends Exception
 {
 
 }

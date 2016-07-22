@@ -1,4 +1,5 @@
 <?php
+
 namespace mahmoudz\fyberPhpSdk;
 
 use Illuminate\Support\ServiceProvider;

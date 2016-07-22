@@ -1,8 +1,10 @@
 <?php
+
 namespace mahmoudz\fyberPhpSdk;
 
 use mahmoudz\fyberPhpSdk\Contracts\FyberInterface;
 use mahmoudz\fyberPhpSdk\Exceptions\MissingApiKeyException;
+use mahmoudz\fyberPhpSdk\Exceptions\MissingRequiredDataException;
 
 /**
  * Class Fyber
@@ -41,34 +43,31 @@ class Fyber implements FyberInterface
     }
 
 
-    private function readConfig()
-    {
-        // TODO: validate configurations not missed and replace it with null if so
-        $this->base_url = $this->config->get('base_url');
-        $this->api_version = $this->config->get('api_version');
-        $this->response_format = $this->config->get('response_format');
-        $this->api_key = $this->config->get('api_key');
-
-        $this->android_app_id = $this->config->get('android_app_id');
-        $this->ios_app_id = $this->config->get('ios_app_id');
-        $this->web_app_id = $this->config->get('web_app_id');
-    }
-
-
     /**
-     * @param $data
+     * refer the docs for what needs to be passed in:
+     *      http://developer.fyber.com/content/current/android/offer-wall/offer-api/
+     *      http://developer.fyber.com/content/current/ios/offer-wall/offer-api/
+     *
+     * @param array $data
+     * @param       $appType
+     *
+     * @return array
      */
-    public function getOffers(Array $data)
+    public function getOffers(Array $data, $appType)
     {
         $endpoint = "offers";
 
-        $parametersArray = $this->getParameters($data);
+        // append the app id based on the app type
+        $data['appid'] = $this->getAppId($appType);
 
-        // append the hashkey to the parameters
-        $parametersArray['hashkey'] = $this->calculateHashKey($parametersArray);
+        // validate the data is correct and complete
+        $data = $this->validateData($data);
 
-        // build the full query parameter
-        $parametersQuery = http_build_query($parametersArray);
+        // append the hash key to the data
+        $data['hashkey'] = $this->calculateHashKey($data);
+
+        // build the full query parameter from the data
+        $parametersQuery = http_build_query($data);
 
         $uri = $this->base_url . "v" . $this->api_version . "/" . $endpoint . '.' . $this->response_format . "?" . $parametersQuery;
 
@@ -77,55 +76,94 @@ class Fyber implements FyberInterface
         return $result;
     }
 
-
     /**
-     * @param array $data
+     * @param $appType
      *
-     * @return  array
+     * @return  null
+     * @throws \mahmoudz\fyberPhpSdk\WrongAppTypeException
      */
-    private function getParameters(Array $data)
+    private function getAppId($appType)
     {
-        // TODO: validate the data input
+        $appId = null;
 
-        $requiredParameters = [
-            // TODO: IMP detect the device type from the request and based on it set the app_id
-            'appid'      => $this->android_app_id,
-            'uid'        => $data['uid'],
-            'locale'     => $data['locale'],
-            'device_id'  => $data['device_id'],
-            'timestamp'  => $data['timestamp'],
-            'os_version' => $data['os_version'],
-        ];
+        switch ($appType) {
+            case 'android':
+                $appId = $this->android_app_id;
+                break;
+            case 'ios':
+                $appId = $this->android_app_id;
+                break;
+            case 'web':
+                $appId = $this->android_app_id;
+                break;
+            default:
+                throw new WrongAppTypeException('Supported App types are ("android", "ios" and "web").');
+        }
 
-        $optionalParameters = [
-            'ip'          => $data['ip'],
-            'pub0'        => $data['pub0'],
-            'page'        => $data['page'],
-            'offer_types' => $data['offer_types'],
-            'ps_time'     => $data['ps_time'],
-            'device'      => $data['offer_types'],
-        ];
-
-        // TODO: detect if Android or iPhone
-
-        $androidRequiredParameters = [
-            'google_ad_id'                          => $data['google_ad_id'],
-            'google_ad_id_limited_tracking_enabled' => $data['google_ad_id_limited_tracking_enabled'],
-        ];
-
-//        $iPhoneRequiredParameters = [
-//            'apple_idfa'                  => $data['apple_idfa'],
-//            'apple_idfa_tracking_enabled' => $data['apple_idfa_tracking_enabled'],
-//        ];
-
-        // merge all arrays into one
-        $parametersArray = array_merge($requiredParameters, $optionalParameters, $androidRequiredParameters);
-
-        return $parametersArray;
+        return $appId;
     }
 
     /**
-     * @param $parameters
+     * @param $data
+     *
+     * @return  array
+     */
+    private function validateData($data)
+    {
+        $allPossibleData = [
+            'appid'                                 => null,
+            'uid'                                   => null,
+            'locale'                                => null,
+            'device_id'                             => null,
+            'os_version'                            => null,
+            'timestamp'                             => null,
+            'ip'                                    => null,
+            'pub0'                                  => null,
+            'page'                                  => null,
+            'offer_types'                           => null,
+            'ps_time'                               => null,
+            'device'                                => null,
+            'google_ad_id'                          => null,
+            'google_ad_id_limited_tracking_enabled' => null,
+            'apple_idfa'                            => null,
+            'apple_idfa_tracking_enabled'           => null,
+        ];
+
+        // Fill missing data input with null, by merging it with the $allPossibleData
+        $data = array_replace_recursive($allPossibleData, $data);
+
+        // remove all null values, in case provided by the input or was missing form the input
+        $data = array_filter($data);
+
+        $required = ['appid', 'uid', 'locale', 'device_id', 'os_version', 'timestamp'];
+
+        if (!$this->requiredFieldsExist($required, $data)) {
+            throw new MissingRequiredDataException();
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param $required
+     * @param $data
+     *
+     * @return  bool
+     */
+    private function requiredFieldsExist($required, $data)
+    {
+        if (count(array_intersect_key(array_flip($required), $data)) === count($required)) {
+            //All required keys exist!
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $parametersArray
+     *
+     * @return  string
      */
     private function calculateHashKey(Array $parametersArray)
     {
@@ -140,13 +178,30 @@ class Fyber implements FyberInterface
         }
 
         // 3.Concatenate the resulting string with the API Key
-        $parametersQueryWithKey = $parametersQuery . $this->api_key;
+        $parametersQueryWithKey = $parametersQuery . '&' . $this->api_key;
 
         // 4. Hash the resulting string using SHA1
         $hashKey = sha1($parametersQueryWithKey);
 
         return $hashKey;
     }
+
+    /**
+     *
+     */
+    private function readConfig()
+    {
+        // TODO: validate configurations not missed and replace it with null if so
+        $this->base_url = $this->config->get('base_url');
+        $this->api_version = $this->config->get('api_version');
+        $this->response_format = $this->config->get('response_format');
+        $this->api_key = $this->config->get('api_key');
+
+        $this->android_app_id = $this->config->get('android_app_id');
+        $this->ios_app_id = $this->config->get('ios_app_id');
+        $this->web_app_id = $this->config->get('web_app_id');
+    }
+
 
     /**
      * @return mixed
