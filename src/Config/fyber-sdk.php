@@ -2,11 +2,11 @@
 
 return [
 
-    'api_key'         => '',
+    'api_key'         => env('FYBER_KEY', ''),
 
-    'android_app_id'  => '',
-    'ios_app_id'      => '',
-    'web_app_id'      => '',
+    'android_app_id'  => env('ANDROID_APP_ID', ''),
+    'ios_app_id'      => env('IOS_APP_ID', ''),
+    'web_app_id'      => env('WEB_APP_ID', ''),
 
     'base_url'        => 'http://api.fyber.com/feed/',
     'api_version'     => '1',

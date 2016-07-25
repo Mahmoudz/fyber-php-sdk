@@ -32,10 +32,8 @@ class Fyber implements FyberInterface
      * @param \mahmoudz\fyberPhpSdk\HttpClient $httpClient
      * @param \mahmoudz\fyberPhpSdk\Config     $config
      */
-    public function __construct(
-        HttpClient $httpClient,
-        Config $config
-    ) {
+    public function __construct(HttpClient $httpClient, Config $config)
+    {
         $this->httpClient = $httpClient;
         $this->config = $config;
 
@@ -177,7 +175,7 @@ class Fyber implements FyberInterface
             throw new MissingApiKeyException('Missing API KEY');
         }
 
-        // 3.Concatenate the resulting string with the API Key
+        // 3. Concatenate the resulting string with the API Key
         $parametersQueryWithKey = $parametersQuery . '&' . $this->api_key;
 
         // 4. Hash the resulting string using SHA1
@@ -187,7 +185,7 @@ class Fyber implements FyberInterface
     }
 
     /**
-     *
+     * Read the values from the config file
      */
     private function readConfig()
     {
