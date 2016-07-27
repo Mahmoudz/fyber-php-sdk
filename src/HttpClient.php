@@ -29,12 +29,13 @@ class HttpClient
 
     /**
      * @param $uri
+     * @param $headers
      *
      * @return  \Psr\Http\Message\ResponseInterface
      */
-    public function get($uri)
+    public function get($uri, $headers)
     {
-        return $this->client->get($uri);
+        return $this->client->get($uri, $headers);
     }
 
 }
