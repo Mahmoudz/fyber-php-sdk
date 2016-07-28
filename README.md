@@ -69,10 +69,10 @@ The easiest way is to use it is by the `Fyber` facade.
 
 $requiredData = [
     'uid'                                   => 1,
-    'locale'                                => 'de',
+    'locale'                                => 'en',
     'device_id'                             => '2b6f22c904d137be2e2730235f5664094b831186',
     'os_version'                            => '4.1.2',
-    'timestamp'                             => Carbon::now()->timestamp,
+    'timestamp'                             => 9922774499,
     'google_ad_id'                          => 'eff26c67f527e6817b36935c54f8cc5cc5cffac2',
     'google_ad_id_limited_tracking_enabled' => '38400000-8cf0-11bd-b23e-20b96e40000d',
 ];
@@ -91,12 +91,37 @@ $offers = $fyber->getOffers($data, 'web');
 
 ## Test
 
-To run the tests, run the following command from the project folder.
+To test it from your code use the following:
 
-```bash
-$ ./vendor/bin/phpunit
+```php
+// create real instance from Fyber
+$fyber = new Fyber();
+
+// create another instance of Fyber and mock it
+$fyberMock = Mockery::mock(Fyber::class);
+
+// now let the function getOffers call the getOffersMock instead
+$fyberMock->shouldReceive('getOffers')->once()->andReturn($fyber->getOffersMock([], ''));
 ```
+Now when your code calls `$this->fyber->getOffers($data, $appType);` it will return the content of `fyber-php-sdk/src/offers-response.txt`.
 
+<br>
+
+Laravel friendly code sample:
+
+```php
+// create real instance from Fyber
+$fyber = App::make(Fyber::class);
+
+// create another instance of Fyber and mock it
+$fyberToMock = App::make(Fyber::class);
+$fyberMock = Mockery::mock(fyberToMock);
+App::instance(fyberToMock, $fyberMock);
+
+// now let the function getOffers call the getOffersMock instead
+$fyberMock->shouldReceive('getOffers')->once()->andReturn($fyber->getOffersMock([], ''));
+```
+Inject `mahmoudz\fyberPhpSdk\Fyber` anywhere in the app and get it automatically mocked, this will also return the content of `fyber-php-sdk/src/offers-response.txt`.
 
 ## Credits
 

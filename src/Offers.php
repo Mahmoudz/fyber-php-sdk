@@ -28,7 +28,7 @@ class Offers
     }
 
     /**
-     * @return  array
+     * @return  array of std objects
      */
     public function getAll()
     {
