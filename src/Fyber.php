@@ -22,6 +22,8 @@ class Fyber implements FyberInterface
 
     protected $response_format;
 
+    protected $offer_callback_token;
+
     private $httpClient;
 
     private $config;
@@ -226,6 +228,8 @@ class Fyber implements FyberInterface
         $this->android_app_id = $this->config->get('android_app_id');
         $this->ios_app_id = $this->config->get('ios_app_id');
         $this->web_app_id = $this->config->get('web_app_id');
+
+        $this->offer_callback_token = $this->config->get('offer_callback_token');
     }
 
 
