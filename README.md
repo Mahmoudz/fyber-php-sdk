@@ -47,12 +47,16 @@ Open `config/fyber-sdk.php` and customze the package
 
 ```php
     'api_key'         => 'z6ca24652116523516f2a9e5b7e02c96',
+    
     'android_app_id'  => '11233',
     'ios_app_id'      => '22344',
     'web_app_id'      => '44566',
+    
     'base_url'        => 'http://api.fyber.com/feed/',
     'api_version'     => '1',
     'response_format' => 'json',
+    
+    'offer_callback_token' => 'a2ca24652116523516f2a9e5b7e02cc3'),
 ```
 
 
@@ -60,6 +64,8 @@ Note: It's very recommended to not add your token (any sensetive data) to the co
 
 
 ## Usage
+
+### Get Offers
 
 ##### With Laravel:
 
@@ -86,6 +92,18 @@ $offers = Fyber::getOffers($requiredData, 'android'); // supported: ios, web and
 // inject `mahmoudz\fyberPhpSdk\Fyber`
 
 $offers = $fyber->getOffers($data, 'web');
+```
+
+### Validate Offers Callback
+
+```php
+// inject `mahmoudz\fyberPhpSdk\Fyber`
+
+$isValid = $this->fyber->isValidOfferCallback($request['amount'], $request['uid'], $request['_trans_id_'], $request['sid']);
+
+if(!$isValid){
+    // return "HTTP/1.0 400 Bad Request: wrong SID"
+}
 ```
 
 
