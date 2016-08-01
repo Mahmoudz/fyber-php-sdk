@@ -2,12 +2,17 @@
 
 namespace mahmoudz\fyberPhpSdk;
 
+use Exception;
 use mahmoudz\fyberPhpSdk\Contracts\FyberInterface;
+use mahmoudz\fyberPhpSdk\Contracts\Validatable;
+use mahmoudz\fyberPhpSdk\Exceptions\CallingNonExistingFunction;
 use mahmoudz\fyberPhpSdk\Exceptions\MissingApiKeyException;
 use mahmoudz\fyberPhpSdk\Exceptions\MissingRequiredDataException;
 
 /**
  * Class Fyber
+ *
+ * @method static Fyber isValidOfferCallback($amount, $uid, $transid, $sid) validate the fyber offer callback
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
@@ -251,6 +256,29 @@ class Fyber implements FyberInterface
         $this->api_key = $key;
 
         return $this;
+    }
+
+    /**
+     * @param $functionName
+     * @param $parameters
+     *
+     * @return  mixed
+     * @throws Exception
+     * @throws \mahmoudz\fyberPhpSdk\Exceptions\CallingNonExistingFunction
+     */
+    public function __call($functionName, $parameters)
+    {
+        $className = str_replace('Callback', '', str_replace('isValid', '', $functionName)) . 'Validator';
+        $fullClassName = __NAMESPACE__ . '\\FyberCallbacksValidators\\' . $className;
+
+        if (!class_exists($fullClassName) || !($instance = new $fullClassName()) instanceof Validatable) {
+            throw new CallingNonExistingFunction('Calling non existing function ' . $functionName);
+        }
+
+        // add the token as the last parameter
+        $parameters[] = $this->offer_callback_token;
+
+        return call_user_func_array([$instance, 'validate'], $parameters);
     }
 
 }
