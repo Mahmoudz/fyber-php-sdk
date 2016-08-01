@@ -194,7 +194,7 @@ class Fyber implements FyberInterface
     private function calculateHashKey(Array $parametersArray)
     {
         // 1. Order all request alphabetically
-        ksort($parametersArray);
+        ksort($parametersArray, SORT_STRING);
 
         // 2. Concatenate all request parameters
         $parametersQuery = http_build_query($parametersArray);
