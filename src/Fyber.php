@@ -102,7 +102,7 @@ class Fyber implements FyberInterface
      */
     public function getOffersMock($data, $appType)
     {
-        $content = file_get_contents(__DIR__ . '/offers-response.txt');
+        $content = file_get_contents(__DIR__ . '/offers-response.json');
 
         $contentObject = json_decode($content);
 

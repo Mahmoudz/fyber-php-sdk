@@ -121,7 +121,7 @@ $fyberMock = Mockery::mock(Fyber::class);
 // now let the function getOffers call the getOffersMock instead
 $fyberMock->shouldReceive('getOffers')->once()->andReturn($fyber->getOffersMock([], ''));
 ```
-Now when your code calls `$this->fyber->getOffers($data, $appType);` it will return the content of `fyber-php-sdk/src/offers-response.txt`.
+Now when your code calls `$this->fyber->getOffers($data, $appType);` it will return the content of `fyber-php-sdk/src/offers-response.json`.
 
 <br>
 
@@ -139,7 +139,7 @@ App::instance(fyberToMock, $fyberMock);
 // now let the function getOffers call the getOffersMock instead
 $fyberMock->shouldReceive('getOffers')->once()->andReturn($fyber->getOffersMock([], ''));
 ```
-Inject `mahmoudz\fyberPhpSdk\Fyber` anywhere in the app and get it automatically mocked, this will also return the content of `fyber-php-sdk/src/offers-response.txt`.
+Inject `mahmoudz\fyberPhpSdk\Fyber` anywhere in the app and get it automatically mocked, this will also return the content of `fyber-php-sdk/src/offers-response.json`.
 
 ## Credits
 
