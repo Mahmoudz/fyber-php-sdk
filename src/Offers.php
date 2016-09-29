@@ -32,6 +32,10 @@ class Offers
      */
     public function getAll()
     {
+        if (!isset($this->content->offers)) {
+            return [];
+        }
+
         return $this->content->offers;
     }
 
