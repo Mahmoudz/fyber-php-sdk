@@ -203,8 +203,8 @@ class Fyber implements FyberInterface
         // 1. Order all request alphabetically
         ksort($parametersArray, SORT_STRING);
 
-        // 2. Concatenate all request parameters
-        $parametersQuery = http_build_query($parametersArray);
+        // 2. Concatenate all request parameters (decoded)
+        $parametersQuery = urldecode(http_build_query($parametersArray));
 
         if (!$this->api_key) {
             throw new MissingApiKeyException('Missing API KEY');
