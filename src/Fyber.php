@@ -18,7 +18,7 @@ use mahmoudz\fyberPhpSdk\Exceptions\MissingRequiredDataException;
  */
 class Fyber implements FyberInterface
 {
-
+    
     public $api_key;
 
     protected $base_url;
@@ -80,18 +80,28 @@ class Fyber implements FyberInterface
             . "/" . $endpoint
             . '.' . $this->response_format
             . "?" . $parametersQuery;
+        
+        return $this->call($uri);
+    }
 
+    /**
+     * @param $uri
+     *
+     * @return  \mahmoudz\fyberPhpSdk\Offers
+     */
+    private function call($uri)
+    {
         $headers = ['Accept' => 'application/json'];
-
+        
         $result = $this->httpClient->get($uri, $headers);
 
         $content = $result->getBody()->getContents();
 
         $contentObject = json_decode($content);
-
+        
         return new Offers($contentObject);
     }
-
+    
     /**
      * Testing function, to see the response without hitting the API
      *
@@ -200,10 +210,11 @@ class Fyber implements FyberInterface
      */
     private function calculateHashKey(Array $parametersArray)
     {
+
         // 1. Order all request alphabetically
         ksort($parametersArray, SORT_STRING);
 
-        // 2. Concatenate all request parameters (decoded)
+        // 2. Concatenate all request parameters
         $parametersQuery = urldecode(http_build_query($parametersArray));
 
         if (!$this->api_key) {
