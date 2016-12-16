@@ -5,6 +5,8 @@
 
 fyber-php-sdk is framework agnostic PHP package that can be integrated easily with Laravel 5.
 
+##### IMPORTANT: I am affiliated (never been) with Fyber or any of Fyber's professional associates. This project is purely my own work and carries no endorsements other than my own.
+
 ## Installation
 
 The recommended way to install this package is via `Composer`.
@@ -144,7 +146,6 @@ Inject `mahmoudz\fyberPhpSdk\Fyber` anywhere in the app and get it automatically
 ## Credits
 
 - [Mahmoud Zalt](https://github.com/Mahmoudz)
-- [All Contributors](../../contributors)
 
 
 ## License
